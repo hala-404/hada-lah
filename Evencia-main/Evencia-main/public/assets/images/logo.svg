@@ -1,0 +1,15 @@
+<svg width="600" height="150" viewBox="0 0 600 150" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Fireworks Design -->
+  <circle cx="75" cy="75" r="7" fill="#624CF5" /> <!-- Center -->
+  <line x1="75" y1="15" x2="75" y2="65" stroke="#624CF5" stroke-width="4" /> <!-- Top Spark -->
+  <line x1="75" y1="85" x2="75" y2="135" stroke="#624CF5" stroke-width="4" /> <!-- Bottom Spark -->
+  <line x1="15" y1="75" x2="65" y2="75" stroke="#624CF5" stroke-width="4" /> <!-- Left Spark -->
+  <line x1="85" y1="75" x2="135" y2="75" stroke="#624CF5" stroke-width="4" /> <!-- Right Spark -->
+  <line x1="40" y1="40" x2="65" y2="65" stroke="#624CF5" stroke-width="4" /> <!-- Top Left Spark -->
+  <line x1="85" y1="85" x2="110" y2="110" stroke="#624CF5" stroke-width="4" /> <!-- Bottom Right Spark -->
+  <line x1="85" y1="65" x2="110" y2="40" stroke="#624CF5" stroke-width="4" /> <!-- Top Right Spark -->
+  <line x1="40" y1="110" x2="65" y2="85" stroke="#624CF5" stroke-width="4" /> <!-- Bottom Left Spark -->
+
+  <!-- Text -->
+  <text x="170" y="100" font-family="Arial, sans-serif" font-size="80" font-weight="bold" fill="black">Evencia</text>
+</svg>
