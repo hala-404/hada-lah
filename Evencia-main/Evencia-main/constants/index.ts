@@ -18,8 +18,8 @@ export const eventDefaultValues = {
   description: '',
   location: '',
   imageUrl: '',
-  startDateTime: new Date(),
-  endDateTime: new Date(),
+  startDateTime: '',   // <-- use empty string
+  endDateTime: '',  
   categoryId: '',
   price: '',
   isFree: false,

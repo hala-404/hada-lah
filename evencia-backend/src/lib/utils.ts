@@ -1,70 +1,60 @@
+export const formatDateTime = (dateInput: string | Date) => {
+  const dateObj = new Date(dateInput);
 
-
-
-export const formatDateTime = (dateString: Date) => {
   const dateTimeOptions: Intl.DateTimeFormatOptions = {
-    weekday: 'short', // abbreviated weekday name (e.g., 'Mon')
-    month: 'short', // abbreviated month name (e.g., 'Oct')
-    day: 'numeric', // numeric day of the month (e.g., '25')
-    hour: 'numeric', // numeric hour (e.g., '8')
-    minute: 'numeric', // numeric minute (e.g., '30')
-    hour12: true, // use 12-hour clock (true) or 24-hour clock (false)
-  }
+    weekday: 'short',  // e.g., 'Mon'
+    month: 'short',    // e.g., 'Oct'
+    day: 'numeric',    // e.g., '25'
+    hour: 'numeric',   // e.g., '8'
+    minute: 'numeric', // e.g., '30'
+    hour12: true,      // 12-hour clock
+  };
 
   const dateOptions: Intl.DateTimeFormatOptions = {
-    weekday: 'short', // abbreviated weekday name (e.g., 'Mon')
-    month: 'short', // abbreviated month name (e.g., 'Oct')
-    year: 'numeric', // numeric year (e.g., '2023')
-    day: 'numeric', // numeric day of the month (e.g., '25')
-  }
+    weekday: 'short',
+    month: 'short',
+    year: 'numeric',
+    day: 'numeric',
+  };
 
   const timeOptions: Intl.DateTimeFormatOptions = {
-    hour: 'numeric', // numeric hour (e.g., '8')
-    minute: 'numeric', // numeric minute (e.g., '30')
-    hour12: true, // use 12-hour clock (true) or 24-hour clock (false)
-  }
-
-  const formattedDateTime: string = new Date(dateString).toLocaleString('en-US', dateTimeOptions)
-
-  const formattedDate: string = new Date(dateString).toLocaleString('en-US', dateOptions)
-
-  const formattedTime: string = new Date(dateString).toLocaleString('en-US', timeOptions)
+    hour: 'numeric',
+    minute: 'numeric',
+    hour12: true,
+  };
 
   return {
-    dateTime: formattedDateTime,
-    dateOnly: formattedDate,
-    timeOnly: formattedTime,
-  }
-}
+    dateTime: dateObj.toLocaleString('en-US', dateTimeOptions),
+    dateOnly: dateObj.toLocaleDateString('en-US', dateOptions),
+    timeOnly: dateObj.toLocaleTimeString('en-US', timeOptions),
+  };
+};
 
 export const formatPrice = (price: string) => {
-  const amount = parseFloat(price)
-  const formattedPrice = new Intl.NumberFormat('en-US', {
+  const amount = parseFloat(price);
+  return new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: 'USD',
-  }).format(amount)
-
-  return formattedPrice
-}
+  }).format(amount);
+};
 
 export const removeKeysFromQuery = ({
   params,
   keysToRemove,
 }: {
-  params: string
-  keysToRemove: string[]
+  params: string;
+  keysToRemove: string[];
 }) => {
-  const currentUrl = new URL(params, window.location.origin)
-  
-  keysToRemove.forEach(key => {
-    currentUrl.searchParams.delete(key)
-  })
+  const currentUrl = new URL(params, window.location.origin);
 
-  return currentUrl.pathname + currentUrl.search
-}
+  keysToRemove.forEach((key) => {
+    currentUrl.searchParams.delete(key);
+  });
+
+  return currentUrl.pathname + currentUrl.search;
+};
 
 export const handleError = (error: unknown) => {
-  console.error(error)
-  throw new Error(typeof error === 'string' ? error : JSON.stringify(error))
-}
-
+  console.error(error);
+  throw new Error(typeof error === 'string' ? error : JSON.stringify(error));
+};

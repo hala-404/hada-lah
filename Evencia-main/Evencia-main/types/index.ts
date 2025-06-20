@@ -24,8 +24,8 @@ export type CreateEventParams = {
     description: string
     location: string
     imageUrl: string
-    startDateTime: Date
-    endDateTime: Date
+    startDateTime: string
+    endDateTime: string
     categoryId: string
     price: string
     isFree: boolean
@@ -42,8 +42,8 @@ export type UpdateEventParams = {
     imageUrl: string
     description: string
     location: string
-    startDateTime: Date
-    endDateTime: Date
+    startDateTime: string
+    endDateTime: string
     categoryId: string
     price: string
     isFree: boolean
@@ -85,8 +85,8 @@ export type Event = {
   isFree: string
   imageUrl: string
   location?: string
-  startDateTime?: Date
-  endDateTime?: Date
+  startDateTime?: string
+  endDateTime?: string
   url: string
   organizerFirstName: string
   organizerLastName: string

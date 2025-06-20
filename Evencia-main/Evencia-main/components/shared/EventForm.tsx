@@ -22,7 +22,6 @@ import { useRouter } from "next/navigation"
 import { createEvent, updateEvent } from "@/lib/actions/event.actions"
 import { IEvent } from "@/lib/database/models/event.model"
 
-
 type EventFormProps = {
   userId: string
   type: "Create" | "Update"
@@ -35,10 +34,14 @@ const EventForm = ({ userId, type, event, eventId }: EventFormProps) => {
   const initialValues = event && type === 'Update' 
     ? { 
       ...event, 
-      startDateTime: new Date(event.startDateTime), 
-      endDateTime: new Date(event.endDateTime) 
+      startDateTime: event.startDateTime || '',
+      endDateTime: event.endDateTime || ''
     }
-    : eventDefaultValues;
+    : {
+      ...eventDefaultValues,
+      startDateTime: '',
+      endDateTime: ''
+    };
   const router = useRouter();
 
   const { startUpload } = useUploadThing('imageUploader')
@@ -61,10 +64,18 @@ const EventForm = ({ userId, type, event, eventId }: EventFormProps) => {
       uploadedImageUrl = uploadedImages[0].url
     }
 
+    // Always send string (ISO) for dates
+    const payload = {
+      ...values,
+      imageUrl: uploadedImageUrl,
+      startDateTime: values.startDateTime,
+      endDateTime: values.endDateTime,
+    };
+
     if(type === 'Create') {
       try {
         const newEvent = await createEvent({
-          event: { ...values, imageUrl: uploadedImageUrl },
+          event: payload,
           userId,
           path: '/profile'
         })
@@ -87,7 +98,7 @@ const EventForm = ({ userId, type, event, eventId }: EventFormProps) => {
       try {
         const updatedEvent = await updateEvent({
           userId,
-          event: { ...values, imageUrl: uploadedImageUrl, _id: eventId },
+          event: { ...payload, _id: eventId },
           path: `/events/${eventId}`
         })
 
@@ -204,15 +215,14 @@ const EventForm = ({ userId, type, event, eventId }: EventFormProps) => {
                       />
                       <p className="ml-3 whitespace-nowrap text-grey-600">Start Date:</p>
                       <DatePicker 
-                        selected={field.value} 
-                        onChange={(date: Date) => field.onChange(date)} 
+                        selected={field.value ? new Date(field.value) : null}
+                        onChange={(date: Date | null) => field.onChange(date ? date.toISOString() : '')}
                         showTimeSelect
                         timeInputLabel="Time:"
                         dateFormat="MM/dd/yyyy h:mm aa"
                         wrapperClassName="datePicker"
                       />
                     </div>
-
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -235,15 +245,14 @@ const EventForm = ({ userId, type, event, eventId }: EventFormProps) => {
                       />
                       <p className="ml-3 whitespace-nowrap text-grey-600">End Date:</p>
                       <DatePicker 
-                        selected={field.value} 
-                        onChange={(date: Date) => field.onChange(date)} 
+                        selected={field.value ? new Date(field.value) : null}
+                        onChange={(date: Date | null) => field.onChange(date ? date.toISOString() : '')}
                         showTimeSelect
                         timeInputLabel="Time:"
                         dateFormat="MM/dd/yyyy h:mm aa"
                         wrapperClassName="datePicker"
                       />
                     </div>
-
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -280,14 +289,12 @@ const EventForm = ({ userId, type, event, eventId }: EventFormProps) => {
                                   checked={field.value}
                                 id="isFree" className="mr-2 h-5 w-5 border-2 border-primary-500" />
                               </div>
-          
                             </FormControl>
                             <FormMessage />
                           </FormItem>
                         )}
                       />   
                     </div>
-
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -317,7 +324,6 @@ const EventForm = ({ userId, type, event, eventId }: EventFormProps) => {
             />
         </div>
 
-
         <Button 
           type="submit"
           size="lg"
@@ -326,7 +332,8 @@ const EventForm = ({ userId, type, event, eventId }: EventFormProps) => {
         >
           {form.formState.isSubmitting ? (
             'Submitting...'
-          ): `${type} Event `}</Button>
+          ): `${type} Event `}
+        </Button>
       </form>
     </Form>
   )

@@ -21,10 +21,9 @@ export function FileUploader({ imageUrl, onFieldChange, setFiles }: FileUploader
   }, [])
 
   const { getRootProps, getInputProps } = useDropzone({
-    onDrop,
-    accept: 'image/*' ? generateClientDropzoneAccept(['image/*']) : undefined,
-  })
-
+  onDrop,
+  accept: generateClientDropzoneAccept(['image/*']),
+})
   return (
     <div
       {...getRootProps()}
