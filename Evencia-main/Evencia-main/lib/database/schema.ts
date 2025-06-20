@@ -182,10 +182,10 @@ export const favoritesRelations = relations(favorites, ({ one }) => ({
     fields: [favorites.userId],
     references: [users.userId],
   }),
-  event: one(events, {
+event: one(events, {
     fields: [favorites.eventId],
-    references: [favorites.eventId],
-  }),
+    references: [events.eventId],
+})
 }));
 
 

@@ -9,8 +9,8 @@ const EventDetails = async ({ params: { id }, searchParams }: SearchParamProps) 
   const event = await getEventById(id);
 
   const relatedEvents = await getRelatedEventsByCategory({
-    categoryId: event.category._id,
-    eventId: event._id,
+    categoryId: event.category?.categoryId,
+    eventId: event?.eventId,
     page: searchParams.page as string,
   })
 
@@ -36,13 +36,13 @@ const EventDetails = async ({ params: { id }, searchParams }: SearchParamProps) 
                   {event.isFree ? 'FREE' : `$${event.price}`}
                 </p>
                 <p className="p-medium-16 rounded-full bg-grey-500/10 px-4 py-2.5 text-grey-500">
-                  {event.category.name}
+                  {event.category?.name}
                 </p>
               </div>
 
               <p className="p-medium-18 ml-2 mt-2 sm:mt-0">
                 by{' '}
-                <span className="text-primary-500">{event.organizer.firstName} {event.organizer.lastName}</span>
+                <span className="text-primary-500">{event.organizer?.firstName} {event.organizer?.lastName}</span>
               </p>
             </div>
           </div>

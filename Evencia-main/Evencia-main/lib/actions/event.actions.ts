@@ -18,8 +18,8 @@ export async function createEvent({ userId, event, path }: CreateEventParams) {
   try {
     const eventData = {
       ...event,
-      createdBy: parseInt(userId),
-      categoryId: parseInt(event.categoryId),
+      createdBy: BigInt(userId),
+      categoryId: BigInt(event.categoryId),
     }
     
     const newEvent = await eventAPI.create(eventData)
@@ -47,7 +47,7 @@ export async function updateEvent({ userId, event, path }: UpdateEventParams) {
   try {
     const eventData = {
       ...event,
-      categoryId: parseInt(event.categoryId),
+      categoryId: BigInt(event.categoryId),
     }
     
     const updatedEvent = await eventAPI.update(event._id, eventData)
@@ -96,7 +96,7 @@ export async function getEventsByUser({ userId, limit = 6, page }: GetEventsByUs
     })
 
     // Filter by user on the frontend for now
-    const filteredEvents = events.data.filter((event: any) => event.createdBy === parseInt(userId))
+    const filteredEvents = events.data.filter((event: any) => event.createdBy === BigInt(userId))
     
     return { 
       data: JSON.parse(JSON.stringify(filteredEvents)), 
@@ -115,14 +115,16 @@ export async function getRelatedEventsByCategory({
   page = 1,
 }: GetRelatedEventsByCategoryParams) {
   try {
-    const events = await eventAPI.getAll({
-      limit,
-      page,
-    })
+const events = await eventAPI.getAll({
+  query: undefined,
+  category: undefined,
+  limit,
+  page: Number(page), // Ensure page is a number
+})
 
     // Filter by category and exclude current event on the frontend for now
     const filteredEvents = events.data.filter((event: any) => 
-      event.categoryId === parseInt(categoryId) && event.eventId !== parseInt(eventId)
+      event.categoryId === BigInt(categoryId) && event.eventId !== BigInt(eventId)
     )
     
     return { 

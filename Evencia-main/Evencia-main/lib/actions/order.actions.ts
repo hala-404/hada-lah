@@ -47,8 +47,8 @@ export const createOrder = async (order: CreateOrderParams) => {
     const db = await connectToDatabase();
     
     const [newOrder] = await db.insert(registrations).values({
-      userId: parseInt(order.buyerId),
-      scheduleId: parseInt(order.eventId), // Note: This might need adjustment based on your schedule implementation
+      userId: BigInt(order.buyerId),
+      scheduleId: BigInt(order.eventId), // Note: This might need adjustment based on your schedule implementation
       totalAmount: order.totalAmount,
       status: 'confirmed',
     }).returning();
@@ -79,7 +79,7 @@ export async function getOrdersByEvent({ searchString, eventId }: GetOrdersByEve
     .leftJoin(users, eq(registrations.userId, users.userId))
     .leftJoin(events, eq(registrations.scheduleId, events.eventId)) // This might need adjustment
     .where(and(
-      eq(events.eventId, parseInt(eventId)),
+      eq(events.eventId, Number(eventId)),
       searchString ? ilike(users.firstName, `%${searchString}%`) : undefined
     ))
 
@@ -96,28 +96,35 @@ export async function getOrdersByUser({ userId, limit = 3, page }: GetOrdersByUs
 
     const skipAmount = (Number(page) - 1) * limit
 
-    const orders = await db.select({
-      registrationId: registrations.registrationId,
-      totalAmount: registrations.totalAmount,
-      createdAt: registrations.createdAt,
-      eventId: events.eventId,
-      eventTitle: events.title,
-      eventDescription: events.description,
-      eventImageUrl: events.imageUrl,
-      organizerFirstName: users.firstName,
-      organizerLastName: users.lastName,
-    })
-    .from(registrations)
-    .leftJoin(events, eq(registrations.scheduleId, events.eventId)) // This might need adjustment
-    .leftJoin(users, eq(events.createdBy, users.userId))
-    .where(eq(registrations.userId, parseInt(userId)))
-    .orderBy(desc(registrations.createdAt))
-    .offset(skipAmount)
-    .limit(limit)
+  if (!userId) throw new Error('User ID is required');
+  const numericUserId = typeof userId === 'bigint'
+    ? userId
+    : BigInt(typeof userId === 'string' ? parseInt(userId, 10) : userId);
+
+  if (isNaN(Number(numericUserId))) throw new Error('User ID must be a valid number');
+
+  const orders = await db.select({
+    registrationId: registrations.registrationId,
+    totalAmount: registrations.totalAmount,
+    createdAt: registrations.createdAt,
+    eventId: events.eventId,
+    eventTitle: events.title,
+    eventDescription: events.description,
+    eventImageUrl: events.imageUrl,
+    organizerFirstName: users.firstName,
+    organizerLastName: users.lastName,
+  })
+  .from(registrations)
+  .leftJoin(events, eq(registrations.scheduleId, events.eventId)) // This might need adjustment
+  .leftJoin(users, eq(events.createdBy, users.userId))
+  .where(eq(registrations.userId, Number(numericUserId)))
+  .orderBy(desc(registrations.createdAt))
+  .offset(skipAmount)
+  .limit(limit)
 
     const [ordersCount] = await db.select({ count: count() })
       .from(registrations)
-      .where(eq(registrations.userId, parseInt(userId)))
+      .where(eq(registrations.userId, Number(userId)))
 
     return { 
       data: JSON.parse(JSON.stringify(orders)), 

@@ -18,7 +18,7 @@ const Card = ({ event, hasOrderLink, hidePrice }: CardProps) => {
 
   // If you want to check if the current user is the event creator, adjust as needed:
   // If your event.organizer.userId is a number and userId is a string, compare as strings:
-  const isEventCreator = userId === event.organizer.userId.toString();
+const isEventCreator = userId && event.organizer?.userId && userId === event.organizer.userId.toString();
 
   return (
     <div className="group relative flex min-h-[380px] w-full max-w-[400px] flex-col overflow-hidden rounded-xl bg-white shadow-md transition-all hover:shadow-lg md:min-h-[438px]">
@@ -43,7 +43,7 @@ const Card = ({ event, hasOrderLink, hidePrice }: CardProps) => {
               {event.isFree ? 'FREE' : `$${event.price}`}
             </span>
             <p className="p-semibold-14 w-min rounded-full bg-grey-500/10 px-4 py-1 text-grey-500 line-clamp-1">
-              {event.category.name}
+              {event.category?.name}
             </p>
           </div>
         )}
@@ -61,7 +61,7 @@ const Card = ({ event, hasOrderLink, hidePrice }: CardProps) => {
 
         <div className="flex-between w-full">
           <p className="p-medium-14 md:p-medium-16 text-grey-600">
-            {event.organizer.firstName} {event.organizer.lastName}
+            {event.organizer?.firstName} {event.organizer?.lastName}
           </p>
 
           {hasOrderLink && (

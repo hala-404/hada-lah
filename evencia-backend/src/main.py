@@ -9,7 +9,7 @@ from flask_cors import CORS
 from src.routes.events import events_bp
 from src.routes.users import users_bp
 from src.routes.categories import categories_bp
-from src.models.user import db  # Import your db instance
+from src.models.user import db # Import your db instance
 
 # Load environment variables from .env
 load_dotenv()
