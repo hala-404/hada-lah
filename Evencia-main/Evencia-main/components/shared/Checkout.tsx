@@ -23,13 +23,25 @@ const Checkout = ({ event, userId }: { event: IEvent, userId: string }) => {
   const onCheckout = async () => {
     const order = {
       eventTitle: event.title,
-      eventId: event._id,
+      eventId: event.eventId,
       price: event.price,
       isFree: event.isFree,
       buyerId: userId
     }
 
-    await checkoutOrder(order);
+  return (
+  <form
+    onSubmit={async (e) => {
+      e.preventDefault();
+      await onCheckout();
+    }}
+    method="post"
+  >
+    <Button type="submit" role="link" size="lg" className="button sm:w-fit">
+      {event.isFree ? 'Get Ticket' : 'Buy Ticket'}
+    </Button>
+  </form>
+)
   }
 
   return (
